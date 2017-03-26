@@ -1,0 +1,15 @@
+{
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    }, 
+    "autoload": {
+        "psr-4": {
+            "CodeCast\\": "src/"
+        }
+    }, 
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    }
+}
