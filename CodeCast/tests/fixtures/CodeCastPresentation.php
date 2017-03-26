@@ -1,16 +1,9 @@
 <?php 
 
-use CodeCast\Context;
-use CodeCast\Gateway\MockGateway;
+use CodeCast\{Context, User};
 
 trait CodeCastPresentation
 {
-    public function setUp()
-    {
-        parent::setUp();
-        Context::$gateway = new MockGateway;
-    }
-
     protected function clearCodeCasts()
     {
         $codecasts = Context::$gateway->findAllCodeCasts();
@@ -19,5 +12,21 @@ trait CodeCastPresentation
         });
 
         return Context::$gateway->findAllCodeCasts()->size() === 0;
+    }
+
+    public function addUser($username)
+    {
+        Context::$gateway->saveUser(new User($username));
+    }
+
+    protected function loginUser($username)
+    {
+        $user = Context::$gateway->findUser($username);
+        if (! is_null($user)) {
+            Context::$gatekeeper->setLoggedInUser($user);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

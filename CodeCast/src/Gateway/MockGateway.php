@@ -6,9 +6,12 @@ class MockGateway implements Gateway
 {
     protected $codeCasts;
 
-    public function __construct($codeCasts = [])
+    protected $users;
+
+    public function __construct($codeCasts = [], $users = [])
     {
         $this->codeCasts = collect($codeCasts);
+        $this->users = collect($users);
     }
 
     public function findAllCodeCasts()
@@ -25,6 +28,18 @@ class MockGateway implements Gateway
     {
         $this->codeCasts = $this->codeCasts->filter(function ($item) use ($codeCast) {
             return $item != $codeCast;
+        });
+    }
+
+    public function saveUser($user)
+    {
+        $this->users[] = $user;
+    }
+
+    public function findUser($username)
+    {
+        return $this->users->filter(function ($user) use ($username) {
+            return $username === $user->getUsername();
         });
     }
 }
