@@ -17,9 +17,6 @@ trait CodeCastPresentation
         $codecasts->each(function ($codecast) {
             Context::$gateway->delete($codecast);
         });
-        // foreach ($codecasts as $codecast) {
-        //     Context::$gateway->delete($codecast);
-        // }
 
         return Context::$gateway->findAllCodeCasts()->size() === 0;
     }
