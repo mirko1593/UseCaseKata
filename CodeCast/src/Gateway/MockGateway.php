@@ -6,6 +6,6 @@ class MockGateway implements Gateway
 {
     public function findAllCodeCasts()
     {
-        return [];
+        return collect();
     }
 }

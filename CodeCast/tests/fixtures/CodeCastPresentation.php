@@ -14,13 +14,13 @@ trait CodeCastPresentation
     protected function clearCodeCasts()
     {
         $codecasts = Context::$gateway->findAllCodeCasts();
-        // $codecasts->each(function ($codecast) {
-        //     Context::$gateway->delete($codecast);
-        // });
-        foreach ($codecasts as $codecast) {
+        $codecasts->each(function ($codecast) {
             Context::$gateway->delete($codecast);
-        }
+        });
+        // foreach ($codecasts as $codecast) {
+        //     Context::$gateway->delete($codecast);
+        // }
 
-        return sizeof(Context::$gateway->findAllCodeCasts()) === 0;
+        return Context::$gateway->findAllCodeCasts()->size() === 0;
     }
 }
