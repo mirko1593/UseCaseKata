@@ -16,4 +16,9 @@ class GateKeeper
         $this->loggedInUser = $loggedInUser;
     }
 
+    public function getLoggedInUser()
+    {
+        return $this->loggedInUser;
+    }
+
 }

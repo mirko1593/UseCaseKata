@@ -1,6 +1,6 @@
 <?php 
 
-use CodeCast\{Context, User};
+use CodeCast\{Context, User, PresentCodeCastUseCase};
 
 trait CodeCastPresentation
 {
@@ -14,7 +14,7 @@ trait CodeCastPresentation
         return Context::$gateway->findAllCodeCasts()->size() === 0;
     }
 
-    public function addUser($username)
+    protected function addUser($username)
     {
         Context::$gateway->saveUser(new User($username));
     }
@@ -28,5 +28,12 @@ trait CodeCastPresentation
         } else {
             return false;
         }
+    }
+
+    protected function countOfPresentedCodeCasts()
+    {
+        $useCase = new PresentCodeCastUseCase;
+
+        return $useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser())->size();
     }
 }
