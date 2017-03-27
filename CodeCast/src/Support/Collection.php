@@ -48,6 +48,20 @@ class Collection implements ArrayAccess
         return new static(array_filter($this->items));
     }
 
+    public function map(callable $callback)
+    {
+        $keys = array_keys($this->items);
+
+        $items = array_map($callback, array_values($this->items), $keys);
+
+        return new static(array_combine($keys, $items));
+    }
+
+    public function first()
+    {
+        return $this->size() > 0 ? $this->items[0] : null;
+    }
+
     public function offsetGet($key)
     {
         return $this->items[$key];

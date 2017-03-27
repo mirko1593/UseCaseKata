@@ -1,14 +1,16 @@
 <?php 
 
-use CodeCast\{Context, User, PresentCodeCastUseCase};
+use CodeCast\{
+    Context, User, Licence, PresentCodeCastUseCase
+};
 
 trait CodeCastPresentation
 {
     protected function clearCodeCasts()
     {
-        $codecasts = Context::$gateway->findAllCodeCasts();
-        $codecasts->each(function ($codecast) {
-            Context::$gateway->delete($codecast);
+        $codeCasts = Context::$gateway->findAllCodeCasts();
+        $codeCasts->each(function ($codeCast) {
+            Context::$gateway->delete($codeCast);
         });
 
         return Context::$gateway->findAllCodeCasts()->size() === 0;
@@ -32,8 +34,20 @@ trait CodeCastPresentation
 
     protected function countOfPresentedCodeCasts()
     {
-        $useCase = new PresentCodeCastUseCase;
+        return $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser())->size();
+    }
 
-        return $useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser())->size();
+    protected function createLicenceForViewing($username, $codeCastTitle)
+    {
+        $user = Context::$gateway->findUser($username);
+        $codeCast = Context::$gateway->findCodeCastByTitle($codeCastTitle);
+        Context::$gateway->saveLicence(new Licence($user, $codeCast));
+
+        return $this->useCase->isLicencedToViewCodeCast($user, $codeCast);
+    }
+
+    protected function createLicenceForDownloading($username, $codeCast)
+    {
+        
     }
 }

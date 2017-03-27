@@ -1,7 +1,7 @@
 <?php 
 
 use CodeCast\Gateway\MockGateway;
-use CodeCast\{Context, GateKeeper};
+use CodeCast\{Context, GateKeeper, PresentCodeCastUseCase};
 
 class ViewCodeCastSummaryTest extends PHPUnit\Framework\TestCase
 {
@@ -9,11 +9,14 @@ class ViewCodeCastSummaryTest extends PHPUnit\Framework\TestCase
 
     use GivenCodeCasts;
 
+    protected $useCase;
+
     public function setUp()
     {
         parent::setUp();
         Context::$gateway = new MockGateway;
         Context::$gatekeeper = new GateKeeper;
+        $this->useCase = new PresentCodeCastUseCase;
     }    
 
     /** @test */
@@ -26,5 +29,19 @@ class ViewCodeCastSummaryTest extends PHPUnit\Framework\TestCase
         $count = $this->countOfPresentedCodeCasts();
 
         $this->assertSame(0, $count);
+    }   
+
+    /** @test */
+    public function can_view_codecast_user_has_been_licenced_to()
+    {
+        $this->addUser('username');
+        $this->loginUser('username');   
+        $this->givenCodeCast();
+        $this->createLicenceForViewing('username', 'Episode 1');
+
+        $codeCasts = $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser());
+
+        $this->assertEquals(1, $codeCasts->size());
+        $this->assertTrue($codeCasts->first()->isViewable);
     }   
 }

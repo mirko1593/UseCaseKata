@@ -8,10 +8,13 @@ class MockGateway implements Gateway
 
     protected $users;
 
-    public function __construct($codeCasts = [], $users = [])
+    protected $licences;
+
+    public function __construct($codeCasts = [], $users = [], $licences = [])
     {
         $this->codeCasts = collect($codeCasts);
         $this->users = collect($users);
+        $this->licences = collect($licences);
     }
 
     public function findAllCodeCasts()
@@ -21,7 +24,8 @@ class MockGateway implements Gateway
 
     public function save($codeCast)
     {
-        return $this->codeCasts[] = $codeCast;   
+        $this->codeCasts[] = $codeCast;   
+        return $codeCast;
     }
 
     public function delete($codeCast)
@@ -33,13 +37,35 @@ class MockGateway implements Gateway
 
     public function saveUser($user)
     {
-        $this->users[] = $user;
+        $this->users[] = $user->establishId();
+        return $user;
     }
 
     public function findUser($username)
     {
         return $this->users->filter(function ($user) use ($username) {
             return $username === $user->getUsername();
+        })->first();
+    }
+
+    public function findCodeCastByTitle($title)
+    {
+        return $this->codeCasts->filter(function ($codeCast) use ($title) {
+            return $codeCast->getTitle() === $title;
+        })->first();
+    }
+
+    public function saveLicence($licence)
+    {
+        $this->licences[] = $licence;
+        return $licence;
+    }
+
+    public function findLicenceForUserAndCodeCast($user, $codeCast)
+    {
+        return $this->licences->filter(function ($licence) use ($user, $codeCast) {
+            return $licence->getUser()->isSame($user)
+                &&  $licence->getCodeCast()->isSame($codeCast);
         });
     }
 }

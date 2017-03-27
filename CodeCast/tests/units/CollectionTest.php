@@ -55,4 +55,16 @@ class CollectionTest extends PHPUnit\Framework\TestCase
 
         $this->assertEquals(range(1, 5), $collection->all());
     }
+
+    /** @test */
+    public function can_map_elems_in_collection()
+    {
+        $collection = collect(['a', 'b', 'c']);
+
+        $collection = $collection->map(function ($e) {
+            return strtoupper($e);
+        });
+
+        $this->assertEquals(['A', 'B', 'C'], $collection->all());
+    }
 }

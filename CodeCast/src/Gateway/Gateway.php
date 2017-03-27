@@ -13,4 +13,10 @@ interface Gateway
     public function saveUser($user);
 
     public function findUser($username);
+
+    public function findCodeCastByTitle($title);
+
+    public function saveLicence($licence);
+
+    public function findLicenceForUserAndCodeCast($user, $codeCast);
 }
