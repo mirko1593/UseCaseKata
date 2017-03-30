@@ -27,16 +27,15 @@ class PresentCodeCastUseCaseTest extends PHPUnit\Framework\TestCase
     }    
 
     /** @test */
-    public function user_with_a_licence_can_view_codecast()
+    public function user_with_a_view_licence_can_view_codecast()
     {
-        $licence = new Licence($this->user, $this->codeCast);
-        Context::$gateway->saveLicence($licence);
+        Context::$gateway->saveLicence(new Licence(Licence::VIEWABLE, $this->user, $this->codeCast));
 
         $this->assertTrue($this->useCase->isLicencedToViewCodeCast($this->user, $this->codeCast));
     }
 
     /** @test */
-    public function user_without_a_licence_cannot_view_others_codecast()
+    public function user_without_a_view_licence_cannot_view_others_codecast()
     {
         $otherUser = Context::$gateway->saveUser(new User('OtherUser'));
 
@@ -53,18 +52,10 @@ class PresentCodeCastUseCaseTest extends PHPUnit\Framework\TestCase
     }
 
     /** @test */
-    public function present_one_codecast()
+    public function can_view_presentable_codecast_if_a_view_licence_exists()
     {
-        $licence = Context::$gateway->saveLicence(new Licence($this->user, $this->codeCast));
-        $codeCasts = $this->useCase->presentCodeCast($this->user);
+        $licence = Context::$gateway->saveLicence(new Licence(Licence::VIEWABLE, $this->user, $this->codeCast));
 
-        $this->assertEquals(1, $codeCasts->size());
-    }
-
-    /** @test */
-    public function can_view_presentable_codecast_if_a_licence_exists()
-    {
-        $licence = Context::$gateway->saveLicence(new Licence($this->user, $this->codeCast));
         $codeCasts = $this->useCase->presentCodeCast($this->user);
 
         $this->assertTrue($codeCasts->first()->isViewable);
@@ -76,5 +67,15 @@ class PresentCodeCastUseCaseTest extends PHPUnit\Framework\TestCase
         $codeCasts = $this->useCase->presentCodeCast($this->user);
         
         $this->assertFalse($codeCasts->first()->isViewable);        
+    }
+
+    /** @test */
+    public function can_download_a_presentable_codecast_if_a_download_licence_exists()
+    {
+        $licence = Context::$gateway->saveLicence(new Licence(Licence::DOWALOADABLE, $this->user, $this->codeCast));
+
+        $codeCasts = $this->useCase->presentCodeCast($this->user);
+
+        $this->assertTrue($codeCasts->first()->isDownloadable);
     }
 }

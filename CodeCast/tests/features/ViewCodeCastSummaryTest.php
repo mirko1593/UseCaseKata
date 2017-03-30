@@ -41,10 +41,10 @@ class ViewCodeCastSummaryTest extends PHPUnit\Framework\TestCase
         $this->givenCodeCast();
         $this->createLicenceForViewing('username', 'Episode 1');
 
-        $presentCodeCasts = $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser());
+        $presentableCodeCasts = $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser());
 
-        $this->assertEquals(1, $presentCodeCasts->size());
-        $this->assertTrue($presentCodeCasts->first()->isViewable);
+        $this->assertEquals(1, $presentableCodeCasts->size());
+        $this->assertTrue($presentableCodeCasts->first()->isViewable);
     }   
 
     /** @test */
@@ -53,14 +53,18 @@ class ViewCodeCastSummaryTest extends PHPUnit\Framework\TestCase
         $this->addUser('username');
         $this->loginUser('username');   
         $codeCasts = $this->givenCodeCasts(); 
+
         $this->createLicenceForViewing('username', 'Episode 2');
+        $this->createLicenceForDownloading('username', 'Episode 1');
 
-        $presentCodeCasts = $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser());
+        $presentableCodeCasts = $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser());
 
-        $this->assertEquals(3, $presentCodeCasts->size());
-
-        $this->assertArraySubset($this->makeResponseData($codeCasts), $presentCodeCasts->map(function ($presentCodeCast) {
-            return $presentCodeCast->toArray();
-        })->toArray());
+        $this->assertEquals(3, $presentableCodeCasts->size());
+        $this->assertArraySubset(
+            $this->makeResponseData($codeCasts), 
+            $presentableCodeCasts->map(function ($presentableCodeCast) {
+                return $presentableCodeCast->toArray();
+            })->toArray()
+        );
     }
 }

@@ -8,7 +8,8 @@ trait OfCodeCasts
             return [
                 'title' => $codeCast->getTitle(), 
                 'publicationDate' => $codeCast->getPublicationDate(), 
-                'isViewable' => ($codeCast->getTitle() === 'Episode 2') ? true : false
+                'isViewable' => ($codeCast->getTitle() === 'Episode 2') ? true : false,
+                'isDownloadable' => ($codeCast->getTitle() === 'Episode 1') ? true : false
             ];
         })->toArray();
     }

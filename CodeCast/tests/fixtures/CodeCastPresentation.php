@@ -41,13 +41,17 @@ trait CodeCastPresentation
     {
         $user = Context::$gateway->findUser($username);
         $codeCast = Context::$gateway->findCodeCastByTitle($codeCastTitle);
-        Context::$gateway->saveLicence(new Licence($user, $codeCast));
+        Context::$gateway->saveLicence(new Licence(Licence::VIEWABLE, $user, $codeCast));
 
         return $this->useCase->isLicencedToViewCodeCast($user, $codeCast);
     }
 
-    protected function createLicenceForDownloading($username, $codeCast)
+    protected function createLicenceForDownloading($username, $codeCastTitle)
     {
-        
+        $user = Context::$gateway->findUser($username);
+        $codeCast = Context::$gateway->findCodeCastByTitle($codeCastTitle);
+        Context::$gateway->saveLicence(new Licence(Licence::DOWALOADABLE, $user, $codeCast));
+
+        return $this->useCase->isLicencedToViewCodeCast($user, $codeCast);
     }
 }
