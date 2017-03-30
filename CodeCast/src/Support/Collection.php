@@ -62,6 +62,11 @@ class Collection implements ArrayAccess
         return $this->size() > 0 ? $this->items[0] : null;
     }
 
+    public function values()
+    {
+        return new static(array_values($this->items));
+    }
+
     public function offsetGet($key)
     {
         return $this->items[$key];

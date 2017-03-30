@@ -19,6 +19,11 @@ class CodeCast
         return $this->title;
     }
 
+    public function getPublicationDate()
+    {
+        return $this->publicationDate;
+    }
+
     public function isSame($codeCast)
     {
         return $this->getTitle() === $codeCast->getTitle();

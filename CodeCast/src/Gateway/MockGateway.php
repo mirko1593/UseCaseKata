@@ -22,6 +22,15 @@ class MockGateway implements Gateway
         return $this->codeCasts;
     }
 
+    public function saveManyCodeCasts($codeCasts)
+    {
+        $codeCasts->each(function ($codeCast) {
+            $this->save($codeCast);
+        });
+
+        return $codeCasts;
+    }
+
     public function save($codeCast)
     {
         $this->codeCasts[] = $codeCast;   
@@ -52,7 +61,7 @@ class MockGateway implements Gateway
     {
         return $this->codeCasts->filter(function ($codeCast) use ($title) {
             return $codeCast->getTitle() === $title;
-        })->first();
+        })->values()->first();
     }
 
     public function saveLicence($licence)

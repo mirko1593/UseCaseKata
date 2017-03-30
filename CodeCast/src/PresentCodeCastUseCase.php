@@ -12,7 +12,12 @@ class PresentCodeCastUseCase
 
         return $codeCasts->map(function ($codeCast) use ($loggedInUser) {
             $pcc = new PresentableCodeCast();
+            $pcc->title = $codeCast->getTitle();
+            $pcc->publicationDate = $codeCast->getPublicationDate();
+            $pcc->picture = $codeCast->getTitle();
+            $pcc->description = $codeCast->getTitle();
             $pcc->isViewable = $this->isLicencedToViewCodeCast($loggedInUser, $codeCast);
+            $pcc->isDownloadable = $this->isLicencedToViewCodeCast($loggedInUser, $codeCast);
             return $pcc;
         });
     }
@@ -20,5 +25,10 @@ class PresentCodeCastUseCase
     public function isLicencedToViewCodeCast($user, $codeCast)
     {
         return Context::$gateway->findLicenceForUserAndCodeCast($user, $codeCast)->size() !== 0;
+    }
+
+    public function isLicencedToDownloadCodeCast($user, $codeCast)
+    {
+        return false;
     }
 }

@@ -9,6 +9,8 @@ class ViewCodeCastSummaryTest extends PHPUnit\Framework\TestCase
 
     use GivenCodeCasts;
 
+    use OfCodeCasts;
+
     protected $useCase;
 
     public function setUp()
@@ -39,9 +41,26 @@ class ViewCodeCastSummaryTest extends PHPUnit\Framework\TestCase
         $this->givenCodeCast();
         $this->createLicenceForViewing('username', 'Episode 1');
 
-        $codeCasts = $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser());
+        $presentCodeCasts = $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser());
 
-        $this->assertEquals(1, $codeCasts->size());
-        $this->assertTrue($codeCasts->first()->isViewable);
+        $this->assertEquals(1, $presentCodeCasts->size());
+        $this->assertTrue($presentCodeCasts->first()->isViewable);
     }   
+
+    /** @test */
+    public function can_view_codecast_user_has_been_licenced_to_in_order()
+    {
+        $this->addUser('username');
+        $this->loginUser('username');   
+        $codeCasts = $this->givenCodeCasts(); 
+        $this->createLicenceForViewing('username', 'Episode 2');
+
+        $presentCodeCasts = $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser());
+
+        $this->assertEquals(3, $presentCodeCasts->size());
+
+        $this->assertArraySubset($this->makeResponseData($codeCasts), $presentCodeCasts->map(function ($presentCodeCast) {
+            return $presentCodeCast->toArray();
+        })->toArray());
+    }
 }
