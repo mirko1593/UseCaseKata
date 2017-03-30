@@ -62,6 +62,15 @@ class Collection implements ArrayAccess
         return $this->size() > 0 ? $this->items[0] : null;
     }
 
+    public function sort(callable $callback)
+    {
+        $items = $this->items;
+
+        $callback ? usort($items, $callback) : asort($items);
+
+        return new static($items);
+    }
+
     public function values()
     {
         return new static(array_values($this->items));

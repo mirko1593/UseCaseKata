@@ -67,4 +67,22 @@ class CollectionTest extends PHPUnit\Framework\TestCase
 
         $this->assertEquals(['A', 'B', 'C'], $collection->all());
     }
+
+    /** @test */
+    public function can_sort_items_with_user_defined_sort()
+    {
+        $collection = collect([
+            ['age' => 24], 
+            ['age' => 20], 
+            ['age' => 31]
+        ]);
+
+        $collection = $collection->sort(function ($item1, $item2) {
+            return $item1['age'] <=> $item2['age'];
+        });
+
+        $this->assertEquals([20, 24, 31], $collection->map(function ($item) {
+            return $item['age'];
+        })->toArray());
+    }
 }

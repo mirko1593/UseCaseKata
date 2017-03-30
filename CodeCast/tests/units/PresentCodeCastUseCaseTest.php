@@ -13,7 +13,7 @@ class PresentCodeCastUseCaseTest extends PHPUnit\Framework\TestCase
         Context::$gateway = new MockGateway;
         Context::$gatekeeper = new GateKeeper;
         $this->user = Context::$gateway->saveUser(new User('User'));
-        $this->codeCast = Context::$gateway->save(new CodeCast('Episode 1', date('Y-m-d'))); 
+        $this->codeCast = Context::$gateway->save(new CodeCast('Episode 1', new DateTime('now'))); 
         $this->useCase = new PresentCodeCastUseCase;
     }     
 
