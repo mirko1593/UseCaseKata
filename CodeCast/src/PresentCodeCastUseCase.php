@@ -22,6 +22,7 @@ class PresentCodeCastUseCase
         $pcc = new PresentableCodeCast();
         $pcc->title = $codeCast->getTitle();
         $pcc->publicationDate = $codeCast->getPublicationDate()->format('Y-m-d');
+        $pcc->permalink = $codeCast->getPermalink();
         $pcc->picture = $codeCast->getTitle();
         $pcc->description = $codeCast->getTitle();
         $pcc->isViewable = $this->isLicencedToViewCodeCast($loggedInUser, $codeCast);

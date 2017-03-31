@@ -13,7 +13,7 @@ class ViewCodeCastDetailUseCase
 
     protected function formatCodeCast($codeCast, $loggedInUser)
     {
-        $pcc = new PresentableCodeCast;
+        $pcc = new PresentableCodeCastDetail;
         $pcc->title = $codeCast->getTitle();
         $pcc->publicationDate = $codeCast->getPublicationDate()->format('Y-m-d');
         $pcc->permalink = $codeCast->getPermalink();
