@@ -26,6 +26,11 @@ class CodeCast extends Entity
         return $this->publicationDate;
     }
 
+    public function getFormattedDate($format = 'Y-m-d')
+    {
+        return $this->getPublicationDate()->format($format);
+    }
+
     public function setPermalink($permalink)
     {
         $this->permalink = $permalink;

@@ -2,6 +2,8 @@
 
 namespace CodeCast\Gateway;
 
+use CodeCast\NullCodeCast;
+
 class MockGateway implements Gateway
 {
     protected $codeCasts;
@@ -82,6 +84,6 @@ class MockGateway implements Gateway
     {
         return $this->codeCasts->filter(function ($CodeCast) use ($permalink) {
             return $CodeCast->getPermalink() === $permalink;
-        })->first();
+        })->first() ?? new NullCodeCast;
     }
 }

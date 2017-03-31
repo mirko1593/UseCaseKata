@@ -13,15 +13,15 @@ class CodeCastSummaryUseCase
         return $codeCasts->sort(function ($c1, $c2) {
             return $c1->getPublicationDate() <=> $c2->getPublicationDate();
         })->map(function ($codeCast) use ($loggedInUser) {
-            return $this->formatCodeCast($codeCast, $loggedInUser);
+            return $this->formatSummaryField($codeCast, $loggedInUser);
         });
     }
 
-    protected function formatCodeCast($codeCast, $loggedInUser)
+    protected function formatSummaryField($codeCast, $loggedInUser)
     {
         $pcc = new PresentableCodeCast();
         $pcc->title = $codeCast->getTitle();
-        $pcc->publicationDate = $codeCast->getPublicationDate()->format('Y-m-d');
+        $pcc->publicationDate = $codeCast->getFormattedDate();
         $pcc->permalink = $codeCast->getPermalink();
         $pcc->picture = $codeCast->getTitle();
         $pcc->description = $codeCast->getTitle();

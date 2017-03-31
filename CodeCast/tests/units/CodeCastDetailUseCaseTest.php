@@ -20,12 +20,22 @@ class CodeCastDetailUseCaseTest extends PHPUnit\Framework\TestCase
     {
         $this->codeCast->setPermalink('episode-1');
 
-        $presentableCodeCast = $this->useCase->requestDetailsByPermalink('episode-1', $this->user);
+        $presentableCodeCastDetail = $this->useCase->requestDetailsByPermalink('episode-1', $this->user);
 
-        $this->assertEquals('Episode 1', $presentableCodeCast->title);
-        $this->assertEquals('episode-1', $presentableCodeCast->permalink);
-        $this->assertEquals($this->codeCast->getPublicationDate()->format('Y-m-d'), $presentableCodeCast->publicationDate);
-        $this->assertFalse($presentableCodeCast->isViewable);
-        $this->assertFalse($presentableCodeCast->isDownloadable);
+        $this->assertEquals('Episode 1', $presentableCodeCastDetail->title);
+        $this->assertEquals('episode-1', $presentableCodeCastDetail->permalink);
+        $this->assertEquals($this->codeCast->getPublicationDate()->format('Y-m-d'), $presentableCodeCastDetail->publicationDate);
+        $this->assertFalse($presentableCodeCastDetail->isViewable);
+        $this->assertFalse($presentableCodeCastDetail->isDownloadable);
     }    
+
+    /** @test */
+    public function wont_crash_when_there_is_no_codecast()
+    {
+        Context::$gateway->delete($this->codeCast);
+
+        $presentableCodeCastDetail = $this->useCase->requestDetailsByPermalink('non-exist-permalink', $this->user);
+
+        $this->assertEquals('not-found', $presentableCodeCastDetail->permalink);
+    }
 }

@@ -7,15 +7,15 @@ class CodeCastDetailUseCase
     public function requestDetailsByPermalink($permalink, $loggedInUser)
     {
         $codeCast = Context::$gateway->findCodeCastByPermalink($permalink);   
-
-        return $this->formatCodeCast($codeCast, $loggedInUser);
+        
+        return $this->formatDetailField($codeCast, $loggedInUser);
     }
 
-    protected function formatCodeCast($codeCast, $loggedInUser)
+    protected function formatDetailField($codeCast, $loggedInUser)
     {
         $pcc = new PresentableCodeCastDetail;
         $pcc->title = $codeCast->getTitle();
-        $pcc->publicationDate = $codeCast->getPublicationDate()->format('Y-m-d');
+        $pcc->publicationDate = $codeCast->getFormattedDate();
         $pcc->permalink = $codeCast->getPermalink();
         $pcc->picture = $codeCast->getTitle();
         $pcc->description = $codeCast->getTitle();
