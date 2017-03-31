@@ -2,7 +2,7 @@
 
 namespace CodeCast;
 
-class ViewCodeCastDetailUseCase
+class CodeCastDetailUseCase
 {
     public function requestDetailsByPermalink($permalink, $loggedInUser)
     {

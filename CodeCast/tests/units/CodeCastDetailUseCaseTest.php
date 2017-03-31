@@ -1,9 +1,9 @@
 <?php 
 
 use CodeCast\Gateway\MockGateway;
-use CodeCast\{Context, GateKeeper, User, CodeCast, ViewCodeCastDetailUseCase};
+use CodeCast\{Context, GateKeeper, User, CodeCast, CodeCastDetailUseCase};
 
-class ViewCodeCastDetailUseCaseTest extends PHPUnit\Framework\TestCase
+class CodeCastDetailUseCaseTest extends PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
@@ -12,7 +12,7 @@ class ViewCodeCastDetailUseCaseTest extends PHPUnit\Framework\TestCase
         Context::$gatekeeper = new GateKeeper;
         $this->user = Context::$gateway->saveUser(new User('User'));
         $this->codeCast = Context::$gateway->save(new CodeCast('Episode 1', new DateTime('now')));  
-        $this->useCase = new ViewCodeCastDetailUseCase;       
+        $this->useCase = new CodeCastDetailUseCase;       
     }
 
     /** @test */

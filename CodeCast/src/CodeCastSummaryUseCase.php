@@ -4,7 +4,7 @@ namespace CodeCast;
 
 use CodeCast\{Context, PresentableCodeCast};
 
-class PresentCodeCastUseCase
+class CodeCastSummaryUseCase
 { 
     public function presentCodeCast($loggedInUser)
     {
