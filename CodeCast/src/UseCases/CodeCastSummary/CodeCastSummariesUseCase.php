@@ -8,7 +8,7 @@ class CodeCastSummariesUseCase
 { 
     public function presentCodeCast($loggedInUser)
     {
-        $codeCasts = Context::$gateway->findAllCodeCasts();
+        $codeCasts = Context::$codeCastGateway->findAllCodeCasts();
 
         return $codeCasts->sort(function ($c1, $c2) {
             return $c1->getPublicationDate() <=> $c2->getPublicationDate();
@@ -33,7 +33,7 @@ class CodeCastSummariesUseCase
 
     public function isLicencedToViewCodeCast($user, $codeCast)
     {
-        $licences = Context::$gateway->findLicenceForUserAndCodeCast($user, $codeCast);
+        $licences = Context::$licenceGateway->findLicenceForUserAndCodeCast($user, $codeCast);
 
         return $licences->filter(function ($licence) {
             return $licence->isViewable();
@@ -42,7 +42,7 @@ class CodeCastSummariesUseCase
 
     public function isLicencedToDownloadCodeCast($user, $codeCast)
     {
-        $licences = Context::$gateway->findLicenceForUserAndCodeCast($user, $codeCast);
+        $licences = Context::$licenceGateway->findLicenceForUserAndCodeCast($user, $codeCast);
 
         return $licences->filter(function ($licence) {
             return $licence->isDownloadable();

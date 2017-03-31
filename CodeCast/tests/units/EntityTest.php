@@ -2,16 +2,9 @@
 
 use CodeCast\Context;
 use CodeCast\Entities\Entity;
-use CodeCast\Gateway\MockGateway;
 
 class EntityTest extends PHPUnit\Framework\TestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-        Context::$gateway = new MockGateway;
-    }
-
     /** @test */
     public function entities_with_different_username_is_not_the_same_entity()
     {

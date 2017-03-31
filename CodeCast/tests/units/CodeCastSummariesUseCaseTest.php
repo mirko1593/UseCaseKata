@@ -1,19 +1,19 @@
 <?php 
 
-use CodeCast\Gateway\MockGateway;
 use CodeCast\{Context, GateKeeper};
 use CodeCast\Entities\{User, CodeCast, Licence};
 use CodeCast\UseCases\CodeCastSummary\CodeCastSummariesUseCase;
 
-class CodeCastSummaryUseCaseTest extends PHPUnit\Framework\TestCase
+class CodeCastSummariesUseCaseTest extends PHPUnit\Framework\TestCase
 {
+    use FixtureSetUp;
+
     public function setUp()
     {
         parent::setUp();
-        Context::$gateway = new MockGateway;
-        Context::$gatekeeper = new GateKeeper;
-        $this->user = Context::$gateway->saveUser(new User('User'));
-        $this->codeCast = Context::$gateway->save(new CodeCast('Episode 1', new DateTime('now'))); 
+        static::setUpContext();       
+        $this->user = Context::$userGateway->save(new User('User'));
+        $this->codeCast = Context::$codeCastGateway->save(new CodeCast('Episode 1', new DateTime('now'))); 
         $this->useCase = new CodeCastSummariesUseCase;
     }     
 
@@ -21,7 +21,7 @@ class CodeCastSummaryUseCaseTest extends PHPUnit\Framework\TestCase
     public function user_without_a_licence_cannot_view_codecast()
     {
         $codeCast = new CodeCast('Episode 2', date('Y-m-d'));
-        $user = Context::$gateway->save(new User('U'));
+        $user = Context::$userGateway->save(new User('U'));
 
         $this->assertFalse($this->useCase->isLicencedToViewCodeCast($user, $codeCast));
     }    
@@ -29,7 +29,7 @@ class CodeCastSummaryUseCaseTest extends PHPUnit\Framework\TestCase
     /** @test */
     public function user_with_a_view_licence_can_view_codecast()
     {
-        Context::$gateway->saveLicence(new Licence(Licence::VIEWABLE, $this->user, $this->codeCast));
+        Context::$licenceGateway->save(new Licence(Licence::VIEWABLE, $this->user, $this->codeCast));
 
         $this->assertTrue($this->useCase->isLicencedToViewCodeCast($this->user, $this->codeCast));
     }
@@ -37,7 +37,7 @@ class CodeCastSummaryUseCaseTest extends PHPUnit\Framework\TestCase
     /** @test */
     public function user_without_a_view_licence_cannot_view_others_codecast()
     {
-        $otherUser = Context::$gateway->saveUser(new User('OtherUser'));
+        $otherUser = Context::$userGateway->save(new User('OtherUser'));
 
         $this->assertFalse($this->useCase->isLicencedToViewCodeCast($otherUser, $this->codeCast));
     }
@@ -45,7 +45,7 @@ class CodeCastSummaryUseCaseTest extends PHPUnit\Framework\TestCase
     /** @test */
     public function present_no_codecast()
     {
-        Context::$gateway->delete($this->codeCast);
+        Context::$codeCastGateway->delete($this->codeCast);
         $codeCasts = $this->useCase->presentCodeCast($this->user);
 
         $this->assertEquals(0, $codeCasts->size());
@@ -54,7 +54,7 @@ class CodeCastSummaryUseCaseTest extends PHPUnit\Framework\TestCase
     /** @test */
     public function can_view_presentable_codecast_if_a_view_licence_exists()
     {
-        $licence = Context::$gateway->saveLicence(new Licence(Licence::VIEWABLE, $this->user, $this->codeCast));
+        $licence = Context::$licenceGateway->save(new Licence(Licence::VIEWABLE, $this->user, $this->codeCast));
 
         $codeCasts = $this->useCase->presentCodeCast($this->user);
 
@@ -72,7 +72,7 @@ class CodeCastSummaryUseCaseTest extends PHPUnit\Framework\TestCase
     /** @test */
     public function can_download_a_presentable_codecast_if_a_download_licence_exists()
     {
-        $licence = Context::$gateway->saveLicence(new Licence(Licence::DOWALOADABLE, $this->user, $this->codeCast));
+        $licence = Context::$licenceGateway->save(new Licence(Licence::DOWALOADABLE, $this->user, $this->codeCast));
 
         $codeCasts = $this->useCase->presentCodeCast($this->user);
 

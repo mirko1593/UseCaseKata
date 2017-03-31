@@ -7,22 +7,22 @@ trait CodeCastPresentation
 {
     protected function clearCodeCasts()
     {
-        $codeCasts = Context::$gateway->findAllCodeCasts();
+        $codeCasts = Context::$codeCastGateway->findAllCodeCasts();
         $codeCasts->each(function ($codeCast) {
-            Context::$gateway->delete($codeCast);
+            Context::$codeCastGateway->delete($codeCast);
         });
 
-        return Context::$gateway->findAllCodeCasts()->size() === 0;
+        return Context::$codeCastGateway->findAllCodeCasts()->size() === 0;
     }
 
     protected function addUser($username)
     {
-        Context::$gateway->saveUser(new User($username));
+        Context::$userGateway->save(new User($username));
     }
 
     protected function loginUser($username)
     {
-        $user = Context::$gateway->findUser($username);
+        $user = Context::$userGateway->findUser($username);
         if (! is_null($user)) {
             Context::$gatekeeper->setLoggedInUser($user);
             return true;
@@ -38,18 +38,18 @@ trait CodeCastPresentation
 
     protected function createLicenceForViewing($username, $codeCastTitle)
     {
-        $user = Context::$gateway->findUser($username);
-        $codeCast = Context::$gateway->findCodeCastByTitle($codeCastTitle);
-        Context::$gateway->saveLicence(new Licence(Licence::VIEWABLE, $user, $codeCast));
+        $user = Context::$userGateway->findUser($username);
+        $codeCast = Context::$codeCastGateway->findCodeCastByTitle($codeCastTitle);
+        Context::$licenceGateway->save(new Licence(Licence::VIEWABLE, $user, $codeCast));
 
         return $this->useCase->isLicencedToViewCodeCast($user, $codeCast);
     }
 
     protected function createLicenceForDownloading($username, $codeCastTitle)
     {
-        $user = Context::$gateway->findUser($username);
-        $codeCast = Context::$gateway->findCodeCastByTitle($codeCastTitle);
-        Context::$gateway->saveLicence(new Licence(Licence::DOWALOADABLE, $user, $codeCast));
+        $user = Context::$userGateway->findUser($username);
+        $codeCast = Context::$codeCastGateway->findCodeCastByTitle($codeCastTitle);
+        Context::$licenceGateway->save(new Licence(Licence::DOWALOADABLE, $user, $codeCast));
 
         return $this->useCase->isLicencedToViewCodeCast($user, $codeCast);
     }

@@ -9,7 +9,7 @@ trait GivenCodeCasts
     {
         $codeCast = new CodeCast('Episode 1', new DateTime('now'));
 
-        return Context::$gateway->save($codeCast);
+        return Context::$codeCastGateway->save($codeCast);
     }
 
     public function givenCodeCasts()
@@ -20,7 +20,7 @@ trait GivenCodeCasts
             new CodeCast('Episode 2', new DateTime('2017-05-01')),
         ]);
 
-        return Context::$gateway->saveManyCodeCasts($codeCasts);
+        return Context::$codeCastGateway->saveManyCodeCasts($codeCasts);
     }
 
     public function setPermalinkTo($permalink, $codeCast)

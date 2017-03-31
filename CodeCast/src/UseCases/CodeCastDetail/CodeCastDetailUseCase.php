@@ -8,8 +8,8 @@ class CodeCastDetailUseCase
 {
     public function requestDetailsByPermalink($permalink, $loggedInUser)
     {
-        $codeCast = Context::$gateway->findCodeCastByPermalink($permalink);   
-        
+        $codeCast = Context::$codeCastGateway->findCodeCastByPermalink($permalink);   
+
         return $this->formatDetailField($codeCast, $loggedInUser);
     }
 
@@ -29,7 +29,7 @@ class CodeCastDetailUseCase
 
     public function isLicencedToViewCodeCast($user, $codeCast)
     {
-        $licences = Context::$gateway->findLicenceForUserAndCodeCast($user, $codeCast);
+        $licences = Context::$licenceGateway->findLicenceForUserAndCodeCast($user, $codeCast);
 
         return $licences->filter(function ($licence) {
             return $licence->isViewable();
@@ -38,7 +38,7 @@ class CodeCastDetailUseCase
 
     public function isLicencedToDownloadCodeCast($user, $codeCast)
     {
-        $licences = Context::$gateway->findLicenceForUserAndCodeCast($user, $codeCast);
+        $licences = Context::$licenceGateway->findLicenceForUserAndCodeCast($user, $codeCast);
 
         return $licences->filter(function ($licence) {
             return $licence->isDownloadable();

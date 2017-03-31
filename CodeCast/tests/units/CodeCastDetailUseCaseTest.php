@@ -1,19 +1,19 @@
 <?php 
 
-use CodeCast\Gateway\MockGateway;
 use CodeCast\{Context, GateKeeper};
 use CodeCast\Entities\{User, CodeCast};
 use CodeCast\UseCases\CodeCastDetail\CodeCastDetailUseCase;
 
 class CodeCastDetailUseCaseTest extends PHPUnit\Framework\TestCase
 {
+    use FixtureSetUp;
+
     public function setUp()
     {
         parent::setUp();
-        Context::$gateway = new MockGateway;
-        Context::$gatekeeper = new GateKeeper;
-        $this->user = Context::$gateway->saveUser(new User('User'));
-        $this->codeCast = Context::$gateway->save(new CodeCast('Episode 1', new DateTime('now')));  
+        static::setUpContext();
+        $this->user = Context::$userGateway->save(new User('User'));
+        $this->codeCast = Context::$codeCastGateway->save(new CodeCast('Episode 1', new DateTime('now')));  
         $this->useCase = new CodeCastDetailUseCase;       
     }
 
@@ -34,7 +34,7 @@ class CodeCastDetailUseCaseTest extends PHPUnit\Framework\TestCase
     /** @test */
     public function wont_crash_when_there_is_no_codecast()
     {
-        Context::$gateway->delete($this->codeCast);
+        Context::$codeCastGateway->delete($this->codeCast);
 
         $presentableCodeCastDetail = $this->useCase->requestDetailsByPermalink('non-exist-permalink', $this->user);
 

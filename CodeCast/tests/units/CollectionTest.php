@@ -85,4 +85,27 @@ class CollectionTest extends PHPUnit\Framework\TestCase
             return $item->age;
         })->toArray());
     }
+
+    /** @test */
+    public function can_delete_an_item_by_key()
+    {
+        $collection = collect([
+            'age' => 24, 
+            'name' => 'kobe'
+        ]);
+
+        $collection->delete('age');
+
+        $this->assertEquals(['name' => 'kobe'], $collection->toArray());
+    }
+
+    /** @test */
+    public function can_delete_items_satisfy_condition()
+    {
+        $collection = collect([1, 2, 3, 4, 5]);
+
+        $collection->delete(function ($item) { return $item > 3; });
+
+        $this->assertEquals([1, 2, 3], $collection->toArray());
+    }
 }

@@ -2,7 +2,6 @@
 
 use CodeCast\Context;
 use CodeCast\Entities\CodeCast;
-use CodeCast\Gateway\MockGateway;
 
 class CodeCastTest extends PHPUnit\Framework\TestCase
 {

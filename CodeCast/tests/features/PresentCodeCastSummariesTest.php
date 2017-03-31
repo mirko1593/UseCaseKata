@@ -1,10 +1,9 @@
 <?php 
 
-use CodeCast\Gateway\MockGateway;
 use CodeCast\{Context, GateKeeper};
 use CodeCast\UseCases\CodeCastSummary\CodeCastSummariesUseCase;
 
-class PresentCodeCastSummaryTest extends PHPUnit\Framework\TestCase
+class PresentCodeCastSummariesTest extends PHPUnit\Framework\TestCase
 {
     use CodeCastPresentation;
 
@@ -12,13 +11,14 @@ class PresentCodeCastSummaryTest extends PHPUnit\Framework\TestCase
 
     use OfCodeCasts;
 
+    use FixtureSetUp;
+
     protected $useCase;
 
     public function setUp()
     {
         parent::setUp();
-        Context::$gateway = new MockGateway;
-        Context::$gatekeeper = new GateKeeper;
+        static::setUpContext();
         $this->useCase = new CodeCastSummariesUseCase;
     }    
 

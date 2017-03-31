@@ -18,6 +18,19 @@ class Collection implements ArrayAccess
         return $this->items;
     }
 
+    public function delete($condition)
+    {
+        if (is_callable($condition)) {
+            $this->items = array_filter($this->items, function ($item) use ($condition) {
+                return ! $condition($item);
+            });
+
+            return $this;
+        }
+        unset($this->items[$condition]);
+        return $this;
+    }
+
     public function size()
     {
         return sizeof($this->items);
