@@ -1,10 +1,10 @@
 <?php 
 
-namespace CodeCast;
+namespace CodeCast\UseCases\CodeCastSummary;
 
-use CodeCast\{Context, PresentableCodeCast};
+use CodeCast\Context;
 
-class CodeCastSummaryUseCase
+class CodeCastSummariesUseCase
 { 
     public function presentCodeCast($loggedInUser)
     {
@@ -19,7 +19,7 @@ class CodeCastSummaryUseCase
 
     protected function formatSummaryField($codeCast, $loggedInUser)
     {
-        $pcc = new PresentableCodeCast();
+        $pcc = new PresentableCodeCastSummary();
         $pcc->title = $codeCast->getTitle();
         $pcc->publicationDate = $codeCast->getFormattedDate();
         $pcc->permalink = $codeCast->getPermalink();

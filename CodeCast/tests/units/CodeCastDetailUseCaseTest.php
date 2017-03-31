@@ -1,7 +1,9 @@
 <?php 
 
 use CodeCast\Gateway\MockGateway;
-use CodeCast\{Context, GateKeeper, User, CodeCast, CodeCastDetailUseCase};
+use CodeCast\{Context, GateKeeper};
+use CodeCast\Entities\{User, CodeCast};
+use CodeCast\UseCases\CodeCastDetail\CodeCastDetailUseCase;
 
 class CodeCastDetailUseCaseTest extends PHPUnit\Framework\TestCase
 {

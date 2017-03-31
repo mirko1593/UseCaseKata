@@ -2,7 +2,7 @@
 
 namespace CodeCast\Gateway;
 
-use CodeCast\NullCodeCast;
+use CodeCast\Entities\NullCodeCast;
 
 class MockGateway implements Gateway
 {

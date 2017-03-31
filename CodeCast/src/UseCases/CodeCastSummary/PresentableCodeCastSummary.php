@@ -1,8 +1,8 @@
 <?php 
 
-namespace CodeCast;
+namespace CodeCast\UseCases\CodeCastSummary;
 
-class PresentableCodeCastDetail
+class PresentableCodeCastSummary
 {
     public $isViewable;
 
@@ -29,5 +29,5 @@ class PresentableCodeCastDetail
             'isViewable' => $this->isViewable, 
             'isDownloadable' => $this->isDownloadable
         ];
-    }    
+    }
 }

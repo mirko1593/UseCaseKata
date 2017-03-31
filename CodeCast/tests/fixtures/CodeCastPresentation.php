@@ -1,8 +1,7 @@
 <?php 
 
-use CodeCast\{
-    Context, User, Licence, PresentCodeCastUseCase
-};
+use CodeCast\{Context, PresentCodeCastUseCase};
+use CodeCast\Entities\{User, Licence};
 
 trait CodeCastPresentation
 {

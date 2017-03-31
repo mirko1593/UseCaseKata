@@ -1,6 +1,8 @@
 <?php 
 
-namespace CodeCast;
+namespace CodeCast\UseCases\CodeCastDetail;
+
+use CodeCast\Context;
 
 class CodeCastDetailUseCase
 {

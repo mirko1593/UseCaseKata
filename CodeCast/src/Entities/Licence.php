@@ -1,6 +1,6 @@
 <?php 
 
-namespace CodeCast;
+namespace CodeCast\Entities;
 
 class Licence extends Entity
 {

@@ -1,6 +1,7 @@
 <?php 
 
-use CodeCast\{Context, CodeCast};
+use CodeCast\Context;
+use CodeCast\Entities\CodeCast;
 
 trait GivenCodeCasts
 {

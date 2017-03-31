@@ -1,6 +1,7 @@
 <?php 
 
-use CodeCast\{Entity, Context};
+use CodeCast\Context;
+use CodeCast\Entities\Entity;
 use CodeCast\Gateway\MockGateway;
 
 class EntityTest extends PHPUnit\Framework\TestCase
