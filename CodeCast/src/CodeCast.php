@@ -2,7 +2,7 @@
 
 namespace CodeCast;
 
-class CodeCast
+class CodeCast extends Entity
 {
     protected $title;
 
@@ -22,10 +22,5 @@ class CodeCast
     public function getPublicationDate()
     {
         return $this->publicationDate;
-    }
-
-    public function isSame($codeCast)
-    {
-        return $this->getTitle() === $codeCast->getTitle();
     }
 }

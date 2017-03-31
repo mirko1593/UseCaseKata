@@ -33,7 +33,7 @@ class MockGateway implements Gateway
 
     public function save($codeCast)
     {
-        $this->codeCasts[] = $codeCast;   
+        $this->codeCasts[] = $codeCast->establishId();   
         return $codeCast;
     }
 
@@ -66,7 +66,7 @@ class MockGateway implements Gateway
 
     public function saveLicence($licence)
     {
-        $this->licences[] = $licence;
+        $this->licences[] = $licence->establishId();
         return $licence;
     }
 

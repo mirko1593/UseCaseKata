@@ -2,7 +2,7 @@
 
 namespace CodeCast;
 
-class Licence
+class Licence extends Entity
 {
     protected $user;
     protected $codeCast;

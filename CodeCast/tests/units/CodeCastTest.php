@@ -1,20 +1,13 @@
 <?php 
 
+use CodeCast\Context;
 use CodeCast\CodeCast;
+use CodeCast\Gateway\MockGateway;
 
 class CodeCastTest extends PHPUnit\Framework\TestCase
 {
     /** @test */
-    public function codeCasts_with_different_title_is_not_the_same_codeCast()
-    {
-        $codeCast1 = new CodeCast('Episode 1', date('Y-m-d'));
-        $codeCast2 = new CodeCast('Episode 2', date('Y-m-d'));
-
-        $this->assertFalse($codeCast1->isSame($codeCast2));
-    }
-
-    /** @test */
-    public function codeCasts_can_be_retrieved_in_order()
+    public function codeCasts_can_be_retrieved_order_by_publication_date()
     {
         $codeCasts = collect([
             new CodeCast('Episode 1', new DateTime('2017-05-01')),
