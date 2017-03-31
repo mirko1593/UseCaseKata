@@ -77,4 +77,11 @@ class MockGateway implements Gateway
                 &&  $licence->getCodeCast()->isSame($codeCast);
         });
     }
+
+    public function findCodeCastByPermalink($permalink)
+    {
+        return $this->codeCasts->filter(function ($CodeCast) use ($permalink) {
+            return $CodeCast->getPermalink() === $permalink;
+        })->first();
+    }
 }

@@ -8,7 +8,7 @@ trait GivenCodeCasts
     {
         $codeCast = new CodeCast('Episode 1', new DateTime('now'));
 
-        Context::$gateway->save($codeCast);
+        return Context::$gateway->save($codeCast);
     }
 
     public function givenCodeCasts()
@@ -20,5 +20,12 @@ trait GivenCodeCasts
         ]);
 
         return Context::$gateway->saveManyCodeCasts($codeCasts);
+    }
+
+    public function setPermalinkTo($permalink, $codeCast)
+    {
+        $codeCast->setPermalink($permalink);
+
+        return $codeCast;
     }
 }

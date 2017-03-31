@@ -8,6 +8,8 @@ class CodeCast extends Entity
 
     protected $publicationDate;
 
+    protected $permalink;
+
     public function __construct($title, $publicationDate)
     {
         $this->title = $title;
@@ -22,5 +24,15 @@ class CodeCast extends Entity
     public function getPublicationDate()
     {
         return $this->publicationDate;
+    }
+
+    public function setPermalink($permalink)
+    {
+        $this->permalink = $permalink;
+    }
+
+    public function getPermalink()
+    {
+        return $this->permalink;
     }
 }
