@@ -10,7 +10,5 @@ class Context
 
     public static $licenceGateway;
     
-    static $gateway;
-
-    static $gatekeeper;
+    public static $gatekeeper;
 }

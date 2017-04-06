@@ -1,6 +1,6 @@
 <?php 
 
-namespace CodeCast\UseCases\CodeCastSummary;
+namespace CodeCast\UseCases\CodeCastSummaries;
 
 class PresentableCodeCastSummary
 {

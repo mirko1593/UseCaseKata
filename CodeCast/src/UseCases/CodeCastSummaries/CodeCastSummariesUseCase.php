@@ -1,6 +1,6 @@
 <?php 
 
-namespace CodeCast\UseCases\CodeCastSummary;
+namespace CodeCast\UseCases\CodeCastSummaries;
 
 use CodeCast\Context;
 
@@ -10,11 +10,13 @@ class CodeCastSummariesUseCase
     {
         $codeCasts = Context::$codeCastGateway->findAllCodeCasts();
 
-        return $codeCasts->sort(function ($c1, $c2) {
-            return $c1->getPublicationDate() <=> $c2->getPublicationDate();
-        })->map(function ($codeCast) use ($loggedInUser) {
-            return $this->formatSummaryField($codeCast, $loggedInUser);
-        });
+        return new CodeCastSummariesResponseModel(
+            $codeCasts->sort(function ($c1, $c2) {
+                return $c1->getPublicationDate() <=> $c2->getPublicationDate();
+            })->map(function ($codeCast) use ($loggedInUser) {
+                return $this->formatSummaryField($codeCast, $loggedInUser);
+            })
+        );
     }
 
     protected function formatSummaryField($codeCast, $loggedInUser)
@@ -47,5 +49,19 @@ class CodeCastSummariesUseCase
         return $licences->filter(function ($licence) {
             return $licence->isDownloadable();
         })->size() > 0;
+    }
+
+    public function summarizeCodecasts($loggedInUser, $presenter)
+    {
+        $codeCasts = Context::$codeCastGateway->findAllCodeCasts();
+
+        $codeCastSummariesResponseModel = new CodeCastSummariesResponseModel(
+            $codeCasts->sort(function ($c1, $c2) {
+                return $c1->getPublicationDate() <=> $c2->getPublicationDate();
+            })->map(function ($codeCast) use ($loggedInUser) {
+                return $this->formatSummaryField($codeCast, $loggedInUser);
+            })
+        );
+        $presenter->present($codeCastSummariesResponseModel);
     }
 }

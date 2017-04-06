@@ -2,7 +2,7 @@
 
 use CodeCast\{Context, GateKeeper};
 use CodeCast\Entities\{User, CodeCast, Licence};
-use CodeCast\UseCases\CodeCastSummary\CodeCastSummariesUseCase;
+use CodeCast\UseCases\CodeCastSummaries\CodeCastSummariesUseCase;
 
 class CodeCastSummariesUseCaseTest extends PHPUnit\Framework\TestCase
 {
@@ -13,69 +13,85 @@ class CodeCastSummariesUseCaseTest extends PHPUnit\Framework\TestCase
         parent::setUp();
         static::setUpContext();       
         $this->user = Context::$userGateway->save(new User('User'));
-        $this->codeCast = Context::$codeCastGateway->save(new CodeCast('Episode 1', new DateTime('now'))); 
+        $this->presenterSpy = new CodeCastSummaryOutputBoundarySpy();
         $this->useCase = new CodeCastSummariesUseCase;
     }     
 
     /** @test */
-    public function user_without_a_licence_cannot_view_codecast()
+    public function usecase_is_wiring_with_a_output_boundary()
     {
-        $codeCast = new CodeCast('Episode 2', date('Y-m-d'));
-        $user = Context::$userGateway->save(new User('U'));
+        $this->useCase->summarizeCodecasts($this->user, $this->presenterSpy);
+        $this->assertNotNull($this->presenterSpy->getResponseModel());
+    }
 
-        $this->assertFalse($this->useCase->isLicencedToViewCodeCast($user, $codeCast));
+    /** @test */
+    public function givenNoCodecasts_usecaseSummarizeNoCodecasts()
+    {
+        $this->useCase->summarizeCodecasts($this->user, $this->presenterSpy);
+        $this->assertSame(0, $this->presenterSpy->getResponseModel()->size());
+    }
+
+    /** @test */
+    public function giveOneCodeCast_usecaseSummarizeOneCodeCast()
+    {
+        Context::$codeCastGateway->save(new CodeCast('Episode', new DateTime('now')));
+
+        $this->useCase->summarizeCodecasts($this->user, $this->presenterSpy);
+
+        $this->assertSame(1, $this->presenterSpy->getResponseModel()->size());        
+    }
+
+    /** @test */
+    public function giveOneCodeCastAndNoLicence_userCanNotViewCodeCast()
+    {
+        $codeCast = Context::$codeCastGateway->save(new CodeCast('Episode', new DateTime('now')));
+
+        $this->assertFalse($this->useCase->isLicencedToViewCodeCast($this->user, $codeCast));
+    }
+
+    /** @test */
+    public function giveOneCodeCastAndOneViewLicence_userCanViewCodeCast()
+    {
+        $codeCast = Context::$codeCastGateway->save(new CodeCast('Episode', new DateTime('now')));
+        Context::$licenceGateway->save(new Licence(Licence::VIEWABLE, $this->user, $codeCast));
+
+        $this->assertTrue($this->useCase->isLicencedToViewCodeCast($this->user, $codeCast));        
+    }
+
+    /** @test */
+    public function givenAUserHaveNotBeenLicenced_userCannotViewOthersCodeCast()
+    {
+        $codeCast = Context::$codeCastGateway->save(new CodeCast('Episode', new DateTime('now')));
+        $user = Context::$userGateway->save(new User('User'));
+        Context::$licenceGateway->save(new Licence(Licence::VIEWABLE, $user, $codeCast));
+
+        $this->assertFalse($this->useCase->isLicencedToViewCodeCast($this->user, $codeCast));
+    }
+
+    /** @test */
+    public function givenOneCodeCastAndNoDownloadLicence_userCanNotDownloadCodeCast()
+    {
+        $codeCast = Context::$codeCastGateway->save(new CodeCast('Episode', new DateTime('now')));
+
+        $this->assertFalse($this->useCase->isLicencedToDownloadCodeCast($this->user, $codeCast));
+    }
+
+    /** @test */
+    public function givenOneCodeCastAndOneDownloadLicence_userCanDownloadCodeCast()
+    {
+        $codeCast = Context::$codeCastGateway->save(new CodeCast('Episode', new DateTime('now')));
+        Context::$licenceGateway->save(new Licence(Licence::DOWALOADABLE, $this->user, $codeCast));
+
+        $this->assertTrue($this->useCase->isLicencedToDownloadCodeCast($this->user, $codeCast));
+    }
+
+    /** @test */
+    public function givenAUserHaveNotBeenLicenced_userCannotDownloadOthersCodeCast()
+    {
+        $codeCast = Context::$codeCastGateway->save(new CodeCast('Episode', new DateTime('now')));
+        $user = Context::$userGateway->save(new User('User'));
+        Context::$licenceGateway->save(new Licence(Licence::DOWALOADABLE, $user, $codeCast));
+
+        $this->assertFalse($this->useCase->isLicencedToDownloadCodeCast($this->user, $codeCast));
     }    
-
-    /** @test */
-    public function user_with_a_view_licence_can_view_codecast()
-    {
-        Context::$licenceGateway->save(new Licence(Licence::VIEWABLE, $this->user, $this->codeCast));
-
-        $this->assertTrue($this->useCase->isLicencedToViewCodeCast($this->user, $this->codeCast));
-    }
-
-    /** @test */
-    public function user_without_a_view_licence_cannot_view_others_codecast()
-    {
-        $otherUser = Context::$userGateway->save(new User('OtherUser'));
-
-        $this->assertFalse($this->useCase->isLicencedToViewCodeCast($otherUser, $this->codeCast));
-    }
-
-    /** @test */
-    public function present_no_codecast()
-    {
-        Context::$codeCastGateway->delete($this->codeCast);
-        $codeCasts = $this->useCase->presentCodeCast($this->user);
-
-        $this->assertEquals(0, $codeCasts->size());
-    }
-
-    /** @test */
-    public function can_view_presentable_codecast_if_a_view_licence_exists()
-    {
-        $licence = Context::$licenceGateway->save(new Licence(Licence::VIEWABLE, $this->user, $this->codeCast));
-
-        $codeCasts = $this->useCase->presentCodeCast($this->user);
-
-        $this->assertTrue($codeCasts->first()->isViewable);
-    }
-
-    /** @test */
-    public function cannot_view_a_codecast_if_a_licence_not_exists()
-    {
-        $codeCasts = $this->useCase->presentCodeCast($this->user);
-        
-        $this->assertFalse($codeCasts->first()->isViewable);        
-    }
-
-    /** @test */
-    public function can_download_a_presentable_codecast_if_a_download_licence_exists()
-    {
-        $licence = Context::$licenceGateway->save(new Licence(Licence::DOWALOADABLE, $this->user, $this->codeCast));
-
-        $codeCasts = $this->useCase->presentCodeCast($this->user);
-
-        $this->assertTrue($codeCasts->first()->isDownloadable);
-    }
 }
