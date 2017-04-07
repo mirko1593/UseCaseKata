@@ -4,20 +4,20 @@ namespace CodeCast\UseCases\CodeCastSummaries;
 
 class CodeCastSummariesResponseModel
 {
-    protected $codeCastSummaryCollection;
+    protected $codeCastSummaries;
 
-    public function __construct($codeCastSummaryCollection)
+    public function __construct($codeCastSummaries)
     {
-        $this->codeCastSummaryCollection = $codeCastSummaryCollection;
+        $this->codeCastSummaries = $codeCastSummaries;
     }
 
     public function size()
     {
-        return $this->codeCastSummaryCollection->size();
+        return $this->codeCastSummaries->size();
     }
 
-    public function getCodeCastSummaryCollection()
+    public function getCodeCastSummaries()
     {
-        return $this->codeCastSummaryCollection;
+        return $this->codeCastSummaries;
     }
 }

@@ -13,7 +13,7 @@ class CodeCastSummariesUseCaseTest extends PHPUnit\Framework\TestCase
         parent::setUp();
         static::setUpContext();       
         $this->user = Context::$userGateway->save(new User('User'));
-        $this->presenterSpy = new CodeCastSummaryOutputBoundarySpy();
+        $this->presenterSpy = new CodeCastSummariesOutputBoundarySpy();
         $this->useCase = new CodeCastSummariesUseCase;
     }     
 

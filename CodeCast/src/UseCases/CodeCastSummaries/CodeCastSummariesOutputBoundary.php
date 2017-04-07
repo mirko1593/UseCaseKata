@@ -2,11 +2,11 @@
 
 namespace CodeCast\UseCases\CodeCastSummaries;
 
-interface CodeCastSummaryOutputBoundary
+interface CodeCastSummariesOutputBoundary
 {
     public function getResponseModel();
 
-    public function present($responseModel);
-
     public function getViewModel();
+
+    public function present($responseModel);
 }

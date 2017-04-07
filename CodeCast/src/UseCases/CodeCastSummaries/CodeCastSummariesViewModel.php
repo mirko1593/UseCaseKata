@@ -4,20 +4,22 @@ namespace CodeCast\UseCases\CodeCastSummaries;
 
 class CodeCastSummariesViewModel
 {
-    protected $viewableCodeCastSummaryCollection;
+    protected $viewableCodeCastSummaries;
 
-    public function setViewableCodeCastSummary($viewableCodeCastSummaryCollection)
+    public function setViewableCodeCastSummaries($viewableCodeCastSummaries)
     {
-        $this->viewableCodeCastSummaryCollection = $viewableCodeCastSummaryCollection;
+        $this->viewableCodeCastSummaries = $viewableCodeCastSummaries;
     }
 
-    public function size()
+    public function toArray()
     {
-        return $this->viewableCodeCastSummaryCollection->size();
+        return $this->viewableCodeCastSummaries->map(function ($viewableCodeCastSummary) {
+            return $viewableCodeCastSummary->toArray();
+        })->toArray();
     }
 
-    public function first()
+    public function __call($name, $arguments)
     {
-        return $this->viewableCodeCastSummaryCollection->first();
+        return call_user_func([$this->viewableCodeCastSummaries, $name], $arguments);
     }
 }

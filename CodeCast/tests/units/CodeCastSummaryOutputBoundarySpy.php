@@ -1,28 +1,28 @@
 <?php 
 
-use CodeCast\UseCases\CodeCastSummaries\CodeCastSummariesViewModel;
-use CodeCast\UseCases\CodeCastSummaries\CodeCastSummaryOutputBoundary;
+use CodeCast\UseCases\CodeCastSummaries\CodeCastSummariesOutputBoundary;
 
-class CodeCastSummaryOutputBoundarySpy implements CodeCastSummaryOutputBoundary
+class CodeCastSummariesOutputBoundarySpy implements CodeCastSummariesOutputBoundary
 {
     protected $responseModel;
 
     protected $viewModel;
+
+    protected $presentWasCalled = false;
 
     public function getResponseModel()
     {
         return $this->responseModel;   
     }
 
-    public function present($responseModel)
-    {
-        $this->responseModel = $responseModel;
-        $this->viewModel = new CodeCastSummariesViewModel();
-        $this->viewModel->setViewableCodeCastSummary($this->responseModel->getCodeCastSummaryCollection());
-    }
-
     public function getViewModel()
     {
         return $this->viewModel;
+    }    
+
+    public function present($responseModel)
+    {
+        $this->responseModel = $responseModel;
+        $this->presentWasCalled = true;
     }
 }

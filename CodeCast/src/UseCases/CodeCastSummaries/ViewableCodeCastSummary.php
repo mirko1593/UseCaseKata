@@ -2,30 +2,21 @@
 
 namespace CodeCast\UseCases\CodeCastSummaries;
 
-class PresentableCodeCastSummary
+class ViewableCodeCastSummary
 {
-    public $isViewable;
-
     public $title;
 
     public $publicationDate;
 
-    public $picture;
-
-    public $description;
+    public $isViewable;
 
     public $isDownloadable;
-
-    public $permalink;
 
     public function toArray()
     {
         return [
             'title' => $this->title, 
-            'publicationDate' => $this->publicationDate,
-            'permalink' => $this->permalink,
-            'picture' => $this->picture, 
-            'description' => $this->description, 
+            'publicationDate' => $this->publicationDate, 
             'isViewable' => $this->isViewable, 
             'isDownloadable' => $this->isDownloadable
         ];

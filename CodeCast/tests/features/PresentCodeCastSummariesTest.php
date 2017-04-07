@@ -2,6 +2,7 @@
 
 use CodeCast\{Context, GateKeeper};
 use CodeCast\UseCases\CodeCastSummaries\CodeCastSummariesUseCase;
+use CodeCast\UseCases\CodeCastSummaries\CodeCastSummariesPresenter;
 
 class PresentCodeCastSummariesTest extends PHPUnit\Framework\TestCase
 {
@@ -20,7 +21,7 @@ class PresentCodeCastSummariesTest extends PHPUnit\Framework\TestCase
         parent::setUp();
         static::setUpContext();
         $this->useCase = new CodeCastSummariesUseCase;
-        $this->presenterSpy = new CodeCastSummaryOutputBoundarySpy();
+        $this->presenter = new CodeCastSummariesPresenter();
     }    
 
     /** @test */
@@ -43,17 +44,16 @@ class PresentCodeCastSummariesTest extends PHPUnit\Framework\TestCase
         $this->givenCodeCast();
         $this->createLicenceForViewing('username', 'Episode 1');
 
-        $this->useCase->summarizeCodecasts(Context::$gatekeeper->getLoggedInUser(), $this->presenterSpy);
-        $codeCastSummariesViewModel = $this->presenterSpy->getViewModel();
+        $this->useCase->summarizeCodecasts(Context::$gatekeeper->getLoggedInUser(), $this->presenter);
+        $codeCastSummariesViewModel = $this->presenter->getViewModel();
 
         $this->assertEquals(1, $codeCastSummariesViewModel->size());
         $this->assertTrue($codeCastSummariesViewModel->first()->isViewable);
     }   
 
-    // /** @test */
+    /** @test */
     public function can_view_codecast_user_has_been_licenced_to_in_order()
     {
-        // TODO: Make this pass, and refactor ViewModel.
         $this->addUser('username');
         $this->loginUser('username');   
         $codeCasts = $this->givenCodeCasts(); 
@@ -61,14 +61,14 @@ class PresentCodeCastSummariesTest extends PHPUnit\Framework\TestCase
         $this->createLicenceForViewing('username', 'Episode 2');
         $this->createLicenceForDownloading('username', 'Episode 1');
 
-        $presentableCodeCasts = $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser());
+        $this->useCase->summarizeCodecasts(Context::$gatekeeper->getLoggedInUser(), $this->presenter);
+        $codeCastSummariesViewModel = $this->presenter->getViewModel();
 
-        $this->assertEquals(3, $presentableCodeCasts->size());
+
+        $this->assertEquals(3, $codeCastSummariesViewModel->size());
         $this->assertArraySubset(
             $this->makeResponseData($codeCasts), 
-            $presentableCodeCasts->map(function ($presentableCodeCast) {
-                return $presentableCodeCast->toArray();
-            })->toArray()
+            $codeCastSummariesViewModel->toArray()
         );
     }
 }

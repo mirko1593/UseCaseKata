@@ -33,7 +33,8 @@ trait CodeCastPresentation
 
     protected function countOfPresentedCodeCasts()
     {
-        return $this->useCase->presentCodeCast(Context::$gatekeeper->getLoggedInUser())->size();
+        $this->useCase->summarizeCodecasts(Context::$gatekeeper->getLoggedInUser(), $this->presenter);
+        return $this->presenter->getViewModel()->size();
     }
 
     protected function createLicenceForViewing($username, $codeCastTitle)
