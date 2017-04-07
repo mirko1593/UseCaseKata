@@ -6,27 +6,6 @@ use CodeCast\Context;
 
 class CodeCastDetailUseCase
 {
-    public function requestDetailsByPermalink($permalink, $loggedInUser)
-    {
-        $codeCast = Context::$codeCastGateway->findCodeCastByPermalink($permalink);   
-
-        return $this->formatDetailField($codeCast, $loggedInUser);
-    }
-
-    protected function formatDetailField($codeCast, $loggedInUser)
-    {
-        $pcc = new PresentableCodeCastDetail;
-        $pcc->title = $codeCast->getTitle();
-        $pcc->publicationDate = $codeCast->getFormattedDate();
-        $pcc->permalink = $codeCast->getPermalink();
-        $pcc->picture = $codeCast->getTitle();
-        $pcc->description = $codeCast->getTitle();
-        $pcc->isViewable = $this->isLicencedToViewCodeCast($loggedInUser, $codeCast);
-        $pcc->isDownloadable = $this->isLicencedToDownloadCodeCast($loggedInUser, $codeCast);
-
-        return $pcc;        
-    }
-
     public function isLicencedToViewCodeCast($user, $codeCast)
     {
         $licences = Context::$licenceGateway->findLicenceForUserAndCodeCast($user, $codeCast);
@@ -43,5 +22,21 @@ class CodeCastDetailUseCase
         return $licences->filter(function ($licence) {
             return $licence->isDownloadable();
         })->size() > 0;
+    }
+
+    public function requestDetailByPermalink($permalink, $loggedInUser, $outputBoundary)
+    {
+        $codeCast = Context::$codeCastGateway->findCodeCastByPermalink($permalink);
+
+        $cc = new CodeCastDetailResponseModel();
+        $cc->title = $codeCast->getTitle();
+        $cc->publicationDate = $codeCast->getFormattedDate();
+        $cc->permalink = $codeCast->getPermalink();
+        $cc->picture = $codeCast->getTitle();
+        $cc->description = $codeCast->getTitle();
+        $cc->isViewable = $this->isLicencedToViewCodeCast($loggedInUser, $codeCast);
+        $cc->isDownloadable = $this->isLicencedToDownloadCodeCast($loggedInUser, $codeCast);
+
+        $outputBoundary->present($cc);
     }
 }

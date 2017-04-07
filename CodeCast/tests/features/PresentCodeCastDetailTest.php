@@ -2,6 +2,7 @@
 
 use CodeCast\{Context, GateKeeper};
 use CodeCast\UseCases\CodeCastDetail\CodeCastDetailUseCase;
+use CodeCast\UseCases\CodeCastDetail\CodeCastDetailPresenter;
 
 class PresentCodeCastDetailTest extends PHPUnit\Framework\TestCase
 {
@@ -18,6 +19,7 @@ class PresentCodeCastDetailTest extends PHPUnit\Framework\TestCase
         parent::setUp();
         static::setUpContext();
         $this->useCase = new CodeCastDetailUseCase;
+        $this->presenter = new CodeCastDetailPresenter;
     }
 
 
@@ -29,8 +31,9 @@ class PresentCodeCastDetailTest extends PHPUnit\Framework\TestCase
         $codeCast = $this->givenCodeCast();
         $this->setPermalinkTo('episode-1', $codeCast);
 
-        $presentableCodeCast = $this->useCase->requestDetailsByPermalink('episode-1', Context::$gatekeeper->getLoggedInUser());
+        $this->useCase->requestDetailByPermalink('episode-1', Context::$gatekeeper->getLoggedInUser(), $this->presenter);
+        $codeCastViewModel = $this->presenter->getViewModel();
 
-        $this->assertArraySubset($this->makeCodeCastDetail($codeCast), $presentableCodeCast->toArray());
+        $this->assertArraySubset($this->makeCodeCastDetail($codeCast), $codeCastViewModel->toArray());
     }
 }
