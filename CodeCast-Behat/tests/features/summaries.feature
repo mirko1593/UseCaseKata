@@ -14,3 +14,18 @@ Feature: Summarize CodeCasts
     When "U" log in
     And view the codecasts summaries
     Then there will be 0 codecasts summaries
+
+  Scenario: See viewable codecasts summaries
+    Given there are codecasts:
+    | title | publicationDate |
+    | Episode 1 | 2017-05-01 |
+    | Episode 2 | now |
+    And there is a user 'U'
+    And there is a 'VIEWABLE' licence for 'U' to view 'Episode 1'
+    When 'U' log in
+    And view the codecasts summaries
+    Then the codecasts summaries will be:
+    | title | publicationDate | viewable | downloadable |
+    | Episode 1 | 2017-05-01 | + | - |
+    | Episode 2 | 2017-04-08 | - | - |    
+

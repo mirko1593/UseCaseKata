@@ -1,5 +1,7 @@
 <?php
 
+use CodeCast\Licence;
+use CodeCast\CodeCast;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Gherkin\Node\PyStringNode;
@@ -14,11 +16,9 @@ class FeatureContext implements Context
 {
     protected $useCase;
 
-    public function __construct($codecastGateway = null, $userGateway = null, $gatekeeper = null)
+    public function __construct()
     {
-        Application::$codecastGateway = $codecastGateway ?? new InMemoryCodeCastGateway;
-        Application::$userGateway = $userGateway ?? new InMemoryUserGateway;
-        Application::$gateKeeper = $gateKeeper ?? new GateKeeper;
+        FeatureSetUp::setUp();
         $this->useCase = new CodeCastSummariesUseCase;
         $this->presenter = new CodeCastSummariesPresenter;
     }
@@ -28,7 +28,7 @@ class FeatureContext implements Context
      */
     public function thereIsNoCodecastsAvailable()
     {
-        Application::$codecastGateway->clearCodeCasts();
+        Application::$codeCastGateway->clearCodeCasts();
     }
 
     /**
@@ -61,6 +61,36 @@ class FeatureContext implements Context
      */
     public function thereWillBeCodecastsSummaries($count)
     {
-        PHPUnit\Framework\Assert::assertCount(intval($count), $this->presenter->getViewModel());
+        PHPUnit\Framework\Assert::assertSame(intval($count), sizeof($this->presenter->getViewModel()->toArray()));
     } 
+
+    /**
+     * @Given there are codecasts:
+     */
+    public function thereAreCodecasts(TableNode $table)
+    {
+        foreach ($table as $row) {
+            Application::$codeCastGateway->save(new CodeCast($row['title'], new DateTime($row['publicationDate'])));
+        }
+    }
+
+    /**
+     * @Given there is a :type licence for :username to view :title
+     */
+    public function thereIsALicenceForToView($type, $username, $title)
+    {
+        $user = Application::$userGateway->findUser($username);
+        $codeCast = Application::$codeCastGateway->findCodeCastByTitle($title);
+        Application::$licenceGateway->save(new Licence(Licence::VIEWABLE, $user, $codeCast));
+    }
+
+    /**
+     * @Then the codecasts summaries will be:
+     */
+    public function theCodecastsSummariesWillBe(TableNode $table)
+    {
+        $viewModel = $this->presenter->getViewModel();
+
+        PHPUnit\Framework\Assert::assertArraySubset($table->getHash(), $viewModel->toArray());
+    }    
 }

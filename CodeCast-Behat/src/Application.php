@@ -4,9 +4,11 @@ namespace CodeCast;
 
 class Application
 {
-    public static $codecastGateway;
+    public static $codeCastGateway;
 
     public static $userGateway;
+
+    public static $licenceGateway;
 
     public static $gateKeeper;
 }
