@@ -23,6 +23,19 @@ class FeatureContext implements Context
         $this->presenter = new CodeCastSummariesPresenter;
     }
 
+    /** 
+     * @Transform table:title,publicationDate
+     */
+    public function castCodeCastsTable(TableNode $codeCastsTable)
+    {
+        $codeCasts = [];
+        foreach ($codeCastsTable as $codeCast) {
+            $codeCasts[] = new CodeCast($codeCast['title'], new DateTime($codeCast['publicationDate']));
+        }
+
+        return $codeCasts;
+    }
+
     /**
      * @Given there is no codecasts available
      */
@@ -67,10 +80,10 @@ class FeatureContext implements Context
     /**
      * @Given there are codecasts:
      */
-    public function thereAreCodecasts(TableNode $table)
+    public function thereAreCodecasts($codeCasts)
     {
-        foreach ($table as $row) {
-            Application::$codeCastGateway->save(new CodeCast($row['title'], new DateTime($row['publicationDate'])));
+        foreach ($codeCasts as $codeCast) {
+            Application::$codeCastGateway->save($codeCast);
         }
     }
 

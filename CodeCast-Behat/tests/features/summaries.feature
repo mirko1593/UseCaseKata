@@ -27,5 +27,5 @@ Feature: Summarize CodeCasts
     Then the codecasts summaries will be:
     | title | publicationDate | viewable | downloadable |
     | Episode 1 | 2017-05-01 | + | - |
-    | Episode 2 | 2017-04-08 | - | - |
+    | Episode 2 | 2017-04-09 | - | - |
 
