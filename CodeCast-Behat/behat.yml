@@ -2,5 +2,6 @@ default:
     suites:
         default:
             paths: [ tests/features ]
+            contexts: [ FeatureContext, DetailContext ]
     autoload:
         '': tests/features/contexts

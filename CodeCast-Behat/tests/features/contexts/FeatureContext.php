@@ -121,7 +121,7 @@ class FeatureContext implements Context
     /**
      * @Then user will see:
      */
-    public function willSee(TableNode $table)
+    public function userWillSee(TableNode $table)
     {
         $viewModel = $this->presenter->getViewModel();
 

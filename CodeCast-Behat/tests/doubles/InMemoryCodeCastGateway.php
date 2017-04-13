@@ -1,5 +1,6 @@
 <?php 
 
+use CodeCast\NullCodeCast;
 use CodeCast\Gateway\CodeCastGateway;
 
 class InMemoryCodeCastGateway implements CodeCastGateway
@@ -55,5 +56,12 @@ class InMemoryCodeCastGateway implements CodeCastGateway
     public function findAllCodeCasts()
     {
         return $this->codeCasts;
+    }
+
+    public function findCodeCastByPermalink($permalink)
+    {
+        return $this->codeCasts->filter(function ($codeCast) use ($permalink) {
+            return $codeCast->getPermalink() === $permalink;
+        })->first() ?? new NullCodeCast;
     }
 }

@@ -6,6 +6,9 @@ class CodeCast extends Entity
 {
     protected $title;
     protected $publicationDate;
+    protected $permalink;
+    protected $description;
+    protected $picture;
 
     public function __construct($title, $publicationDate)
     {
@@ -21,5 +24,30 @@ class CodeCast extends Entity
     public function getFormattedDate()
     {
         return $this->publicationDate->format('Y-m-d');
+    }
+
+    public function getPublicationDate()
+    {
+        return $this->publicationDate;
+    }
+
+    public function setPermalink($permalink)
+    {
+        $this->permalink = $permalink;
+    }
+
+    public function getPermalink()
+    {
+        return $this->permalink;
+    }
+
+    public function getDescription()
+    {
+        return $this->title;
+    }
+
+    public function getPicture()
+    {
+        return $this->title;
     }
 }

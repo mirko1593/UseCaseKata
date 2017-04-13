@@ -11,4 +11,6 @@ interface CodeCastGateway
     public function findCodeCastByTitle($title);
 
     public function findAllCodeCasts();
+
+    public function findCodeCastByPermalink($permalink);
 }
