@@ -98,6 +98,17 @@ class FeatureContext implements Context
     }
 
     /**
+     * @Given there is a :type licence for :username to download :title
+     */
+    public function thereIsALicenceForToDownload($type, $username, $title)
+    {
+        $user = Application::$userGateway->findUser($username);
+        $codeCast = Application::$codeCastGateway->findCodeCastByTitle($title);
+
+        Application::$licenceGateway->save(new Licence(Licence::DOWNLOADABLE, $user, $codeCast));
+    }    
+
+    /**
      * @Then the codecasts summaries will be:
      */
     public function theCodecastsSummariesWillBe(TableNode $table)
@@ -105,5 +116,15 @@ class FeatureContext implements Context
         $viewModel = $this->presenter->getViewModel();
 
         PHPUnit\Framework\Assert::assertArraySubset($table->getHash(), $viewModel->toArray());
-    }    
+    }   
+
+    /**
+     * @Then user will see:
+     */
+    public function willSee(TableNode $table)
+    {
+        $viewModel = $this->presenter->getViewModel();
+
+        PHPUnit\Framework\Assert::assertArraySubset($table->getHash(), $viewModel->toArray());        
+    }
 }

@@ -25,7 +25,8 @@ class CodeCastSummariesUseCase
         $ccs->title = $codeCast->getTitle();
         $ccs->publicationDate = $codeCast->getFormattedDate();
         $ccs->isViewable = $this->isLicencedToViewCodeCast($user, $codeCast);
-
+        $ccs->isDownloadable = $this->isLicencedToDownloadCodeCast($user, $codeCast);
+        
         return $ccs;
     }
 
