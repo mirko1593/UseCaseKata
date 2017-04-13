@@ -3,8 +3,9 @@
 namespace CodeCast\UseCases\CodeCastDetail;
 
 use CodeCast\Application;
+use CodeCast\UseCases\CodeCastUseCase;
 
-class CodeCastDetailUseCase implements CodeCastDetailInputBoundary
+class CodeCastDetailUseCase extends CodeCastUseCase implements CodeCastDetailInputBoundary
 {
     public function requestDetailByPermalink($permalink, $loggedInUser, $presenter)
     {
@@ -24,23 +25,5 @@ class CodeCastDetailUseCase implements CodeCastDetailInputBoundary
         $responseModel->isDownloadable = $this->isLicencedToDownloadCodeCast($loggedInUser, $codeCast);
 
         return $responseModel;
-    }
-
-    public function isLicencedToViewCodeCast($user, $codeCast)
-    {
-        $licences = Application::$licenceGateway->findLicenceByUserAndCodeCast($user, $codeCast);
-
-        return $licences->filter(function ($licence) {
-            return $licence->isViewable();
-        })->size() > 0;
-    }
-
-    public function isLicencedToDownloadCodeCast($user, $codeCast)
-    {
-        $licences = Application::$licenceGateway->findLicenceByUserAndCodeCast($user, $codeCast);
-
-        return $licences->filter(function ($licence) {
-            return $licence->isDownloadable();
-        })->size() > 0;
     } 
 }

@@ -3,8 +3,9 @@
 namespace CodeCast\UseCases\CodeCastSummaries;
 
 use CodeCast\Application;
+use CodeCast\UseCases\CodeCastUseCase;
 
-class CodeCastSummariesUseCase
+class CodeCastSummariesUseCase extends CodeCastUseCase implements CodeCastSummariesInputBoundary
 {
     public function summarizeCodeCasts($loggedInUser, $presenter)
     {
@@ -28,23 +29,5 @@ class CodeCastSummariesUseCase
         $ccs->isDownloadable = $this->isLicencedToDownloadCodeCast($user, $codeCast);
         
         return $ccs;
-    }
-
-    public function isLicencedToViewCodeCast($user, $codeCast)
-    {
-        $licences = Application::$licenceGateway->findLicenceByUserAndCodeCast($user, $codeCast);
-
-        return $licences->filter(function ($licence) {
-            return $licence->isViewable();
-        })->size() > 0;
-    }
-
-    public function isLicencedToDownloadCodeCast($user, $codeCast)
-    {
-        $licences = Application::$licenceGateway->findLicenceByUserAndCodeCast($user, $codeCast);
-
-        return $licences->filter(function ($licence) {
-            return $licence->isDownloadable();
-        })->size() > 0;
-    }    
+    }  
 }
